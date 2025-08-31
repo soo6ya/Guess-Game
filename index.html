@@ -7,23 +7,52 @@
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      color: #fff;
+      margin: 0;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
       overflow: hidden;
+      position: relative;
+      background: linear-gradient(270deg, #1d2b64, #f8cdda, #283c86, #45a247);
+      background-size: 600% 600%;
+      animation: gradientShift 20s ease infinite;
+      color: #fff;
+    }
+
+    /* Animated background circles */
+    .circle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.3;
+      animation: float 20s linear infinite;
+    }
+    .circle:nth-child(1) { width: 120px; height: 120px; background: #ff4b2b; top: 20%; left: 10%; animation-duration: 18s; }
+    .circle:nth-child(2) { width: 200px; height: 200px; background: #ffd700; top: 60%; left: 70%; animation-duration: 25s; }
+    .circle:nth-child(3) { width: 150px; height: 150px; background: #00ff90; top: 80%; left: 20%; animation-duration: 22s; }
+    .circle:nth-child(4) { width: 100px; height: 100px; background: #1e90ff; top: 30%; left: 80%; animation-duration: 28s; }
+
+    @keyframes float {
+      0% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-60px) rotate(180deg); }
+      100% { transform: translateY(0) rotate(360deg); }
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     .card {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
       padding: 30px;
       border-radius: 20px;
       text-align: center;
       width: 350px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      z-index: 1;
       animation: fadeIn 1s ease-out;
     }
 
@@ -84,7 +113,7 @@
     footer {
       margin-top: 20px;
       font-size: 0.9rem;
-      color: #bbb;
+      color: #ddd;
     }
 
     footer a {
@@ -117,6 +146,12 @@
   </style>
 </head>
 <body>
+
+  <!-- Floating circles -->
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
 
   <div class="card">
     <h1>🎯 Guess the Number</h1>
