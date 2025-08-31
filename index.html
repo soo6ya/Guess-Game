@@ -114,6 +114,14 @@
         result.style.color = "#ffa07a";
       }
     }
+
+    // Allow pressing Enter key to submit guess
+    document.getElementById("guess").addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        checkGuess();
+      }
+    });
   </script>
 
 </body>
