@@ -6,99 +6,169 @@
   <title>🎯 Guess the Number</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
       color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 30px;
+      border-radius: 20px;
       text-align: center;
-      padding: 50px;
-      min-height: 100vh;
+      width: 350px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      animation: fadeIn 1s ease-out;
     }
 
     h1 {
-      font-size: 2.5rem;
+      font-size: 2rem;
       color: #ffd700;
       margin-bottom: 20px;
+      animation: bounceIn 1s ease;
     }
 
     p {
       font-size: 1.1rem;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
 
     input[type="number"] {
-      padding: 10px;
-      width: 200px;
-      font-size: 18px;
+      padding: 12px;
+      width: 80%;
+      font-size: 16px;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       outline: none;
+      margin-bottom: 15px;
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    input[type="number"]:focus {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px #ffd700;
     }
 
     button {
-      padding: 10px 25px;
-      font-size: 18px;
-      background-color: #ff4081;
+      padding: 12px 20px;
+      font-size: 16px;
+      background: linear-gradient(45deg, #ff416c, #ff4b2b);
       color: white;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       cursor: pointer;
-      margin-left: 10px;
-      transition: background 0.3s;
+      margin: 8px;
+      transition: all 0.3s ease;
     }
 
     button:hover {
-      background-color: #e91e63;
+      transform: scale(1.08);
+      box-shadow: 0 0 15px #ff4b2b;
     }
 
     #result {
-      margin-top: 30px;
-      font-size: 1.4rem;
+      margin-top: 20px;
+      font-size: 1.2rem;
       font-weight: bold;
-      color: #fff;
+      min-height: 40px;
+      animation: fadeText 0.5s ease-in-out;
     }
 
     footer {
-      margin-top: 50px;
+      margin-top: 20px;
       font-size: 0.9rem;
-      color: #ccc;
+      color: #bbb;
     }
 
     footer a {
       color: #ffd700;
       text-decoration: none;
       font-weight: bold;
+      transition: 0.3s;
     }
 
     footer a:hover {
-      text-decoration: underline;
+      text-shadow: 0 0 10px #ffd700;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes bounceIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      60% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes fadeText {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
     }
   </style>
 </head>
 <body>
 
-  <h1>🎯 Number Guessing Game</h1>
-  <p>I’ve picked a number between <strong>1 and 10</strong>. Can you guess it?</p>
+  <div class="card">
+    <h1>🎯 Guess the Number</h1>
+    
+    <!-- Difficulty selection -->
+    <div id="level-selection">
+      <p>Select Difficulty:</p>
+      <button onclick="startGame('easy')">Easy (1-10)</button>
+      <button onclick="startGame('medium')">Medium (1-25)</button>
+      <button onclick="startGame('hard')">Hard (1-50)</button>
+      <button onclick="startGame('extreme')">Extreme (1-100)</button>
+    </div>
 
-  <input type="number" id="guess" placeholder="Enter your guess" />
-  <button onclick="checkGuess()">Guess</button>
+    <!-- Game UI -->
+    <div id="game" style="display: none;">
+      <p id="range-text"></p>
+      <input type="number" id="guess" placeholder="Enter your guess" />
+      <br>
+      <button onclick="checkGuess()">Guess</button>
+      <div id="result"></div>
+      <button id="playAgain" style="display:none;" onclick="resetGame()">🔄 Play Again</button>
+    </div>
 
-  <div id="result"></div>
-
-  <footer>
-    Made with ❤ by <a href="https://www.instagram.com/soo6ya" target="_blank">@soo6ya</a>
-  </footer>
+    <footer>
+      Made with ❤ by <a href="https://www.instagram.com/soo6ya" target="_blank">@soo6ya</a>
+    </footer>
+  </div>
 
   <script>
-    const secret = Math.floor(Math.random() * 10) + 1;
-    let tries = 0;
+    let secret, tries, maxRange;
+
+    function startGame(level) {
+      tries = 0;
+      if (level === "easy") maxRange = 10;
+      else if (level === "medium") maxRange = 25;
+      else if (level === "hard") maxRange = 50;
+      else if (level === "extreme") maxRange = 100;
+
+      secret = Math.floor(Math.random() * maxRange) + 1;
+
+      document.getElementById("level-selection").style.display = "none";
+      document.getElementById("game").style.display = "block";
+      document.getElementById("range-text").textContent = `I’ve picked a number between 1 and ${maxRange}. Can you guess it?`;
+    }
 
     function checkGuess() {
       const guess = parseInt(document.getElementById("guess").value);
       const result = document.getElementById("result");
       tries++;
 
-      if (isNaN(guess) || guess < 1 || guess > 10) {
-        result.textContent = "⚠ Please enter a number between 1 and 10!";
+      if (isNaN(guess) || guess < 1 || guess > maxRange) {
+        result.textContent = `⚠ Please enter a number between 1 and ${maxRange}!`;
         result.style.color = "#ffcc00";
         return;
       }
@@ -106,6 +176,7 @@
       if (guess === secret) {
         result.textContent = `🎉 Correct! You guessed it in ${tries} tries.`;
         result.style.color = "#00ff90";
+        document.getElementById("playAgain").style.display = "inline-block";
       } else if (guess < secret) {
         result.textContent = "📉 Too low! Try again.";
         result.style.color = "#add8e6";
@@ -113,12 +184,20 @@
         result.textContent = "📈 Too high! Try again.";
         result.style.color = "#ffa07a";
       }
+
+      result.style.animation = "fadeText 0.5s ease-in-out";
     }
 
-    // Allow pressing Enter key to submit guess
-    document.getElementById("guess").addEventListener("keydown", function(e) {
-      if (e.key === "Enter") {
-        e.preventDefault();
+    function resetGame() {
+      document.getElementById("game").style.display = "none";
+      document.getElementById("level-selection").style.display = "block";
+      document.getElementById("playAgain").style.display = "none";
+      document.getElementById("result").textContent = "";
+      document.getElementById("guess").value = "";
+    }
+
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Enter" && document.getElementById("game").style.display === "block") {
         checkGuess();
       }
     });
@@ -126,5 +205,3 @@
 
 </body>
 </html>
-
-
